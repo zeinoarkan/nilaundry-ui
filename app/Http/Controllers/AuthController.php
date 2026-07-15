@@ -13,9 +13,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    // ==========================================
-    //   --- ADMIN (TANPA DATABASE) ---
-    // ==========================================
+    //   ADMIN 
 
     public function formLoginAdmin() 
     { 
@@ -31,12 +29,10 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Kredensial statis admin (Silakan ganti sesuai keinginan)
         $dummyAdminUsername = 'admin';
         $dummyAdminPassword = 'admin'; 
 
         if ($request->username === $dummyAdminUsername && $request->password === $dummyAdminPassword) {
-            // Set session khusus admin tanpa guard database
             Session::put('admin_logged_in', true);
             Session::put('admin_username', $request->username);
 
@@ -53,9 +49,7 @@ class AuthController extends Controller
     }
 
 
-    // ==========================================
     //   --- PELANGGAN (DENGAN DATABASE) ---
-    // ==========================================
 
     public function formLoginUser() { 
         return view('auth.login-user'); 
@@ -104,14 +98,11 @@ class AuthController extends Controller
     }
     
     public function logout() {
-        // Logika logout pelanggan bawaan database
         Auth::guard('web')->logout();
         return redirect('/'); 
     }
 
-    // ==========================================
     //   --- FORGOT PASSWORD & OTP ---
-    // ==========================================
 
     public function formForgotPassword() {
         return view('auth.forgot-password');
@@ -139,7 +130,6 @@ class AuthController extends Controller
         $message .= "Kode OTP Anda adalah: *{$otp}*\n\n";
         $message .= "Kode ini berlaku selama 5 menit. Jangan berikan kepada siapapun.";
 
-        // PERBAIKAN: Menggunakan $this-> karena metodenya bukan static lagi
         $this->kirimPesanFonnte($user->no_hp, $message);
 
         return redirect('/verify-otp')->with('success', 'Kode OTP telah dikirim ke WhatsApp Anda.');
@@ -184,9 +174,7 @@ class AuthController extends Controller
         return back()->with('error', 'Terjadi kesalahan sistem.');
     }
 
-    // ==========================================
     //   --- FUNGSI PRIVAT FONNTE ---
-    // ==========================================
     private function kirimPesanFonnte($target, $pesan) {
         $token = 'Z4RJR27QU6JaxbXVAt2a'; 
 
